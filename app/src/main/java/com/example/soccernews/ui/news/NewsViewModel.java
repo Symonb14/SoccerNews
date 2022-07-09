@@ -4,24 +4,49 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.soccernews.data.remote.SoccerNewsApi;
 import com.example.soccernews.domain.News;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class NewsViewModel extends ViewModel {
 
-    private final MutableLiveData<List<News>> mNews;
+    private final MutableLiveData<List<News>> mNews = new MutableLiveData<>();
+    private final SoccerNewsApi api;
 
     public NewsViewModel() {
-        mNews = new MutableLiveData<>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://digitalinnovationone.github.io/soccer-news-api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        List<News> news = new ArrayList<>();
-        news.add(new News("Ferroviaria Tem Desfalque Importante", "A principal jogadora do time sofreu uma lesão no treino"));
-        news.add(new News("Cruzeiro Joga No Sábado", "Com o atacante Edu em ótima fase."));
-        news.add(new News("Time Feminino Do Atlético", "Meninas do Atlético sofre mais uma derrota dentro de casa"));
+        api = retrofit.create(SoccerNewsApi.class);
+        this.findNews();
+    }
 
-        mNews.setValue(news);
+    private void findNews() {
+        api.getNews().enqueue(new Callback<List<News>>() {
+            @Override
+            public void onResponse(Call<List<News>> call, Response<List<News>> response) {
+                if (response.isSuccessful()){
+                    mNews.setValue(response.body());
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<News>> call, Throwable t) {
+
+            }
+        });
     }
 
     public LiveData<List<News>> getNews() {
