@@ -2,7 +2,7 @@ package com.example.soccernews.data;
 
 import androidx.room.Room;
 
-import com.example.soccernews.MainActivity;
+import com.example.soccernews.App;
 import com.example.soccernews.data.local.SoccerNewsDb;
 import com.example.soccernews.data.remote.SoccerNewsApi;
 
@@ -37,7 +37,7 @@ public class SoccerNewsRepository {
                 .build()
                 .create(SoccerNewsApi.class);
 
-        localDb = Room.databaseBuilder(MainActivity.getInstance(), SoccerNewsDb.class, LOCAL_DB_NAME).build();
+        localDb = Room.databaseBuilder(App.getInstance(), SoccerNewsDb.class, LOCAL_DB_NAME).build();
     }
 
     public static SoccerNewsRepository getInstance() {

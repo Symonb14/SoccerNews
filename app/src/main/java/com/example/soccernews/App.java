@@ -2,11 +2,11 @@ package com.example.soccernews;
 
 import android.app.Application;
 
-public class MainActivity extends Application {
+public class App extends Application {
 
-    private static MainActivity instance;
+    private static App instance;
 
-    public static MainActivity getInstance() {
+    public static App getInstance() {
         return instance;
     }
 
