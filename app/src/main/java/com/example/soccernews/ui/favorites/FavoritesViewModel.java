@@ -1,19 +1,25 @@
 package com.example.soccernews.ui.favorites;
 
+import android.os.AsyncTask;
+
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.example.soccernews.data.SoccerNewsRepository;
+import com.example.soccernews.domain.News;
+
+import java.util.List;
 
 public class FavoritesViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
-
     public FavoritesViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is favorites fragment");
+
+    }
+    public LiveData<List<News>> loadFavoriteNews() {
+        return (LiveData<List<News>>) SoccerNewsRepository.getInstance().getLocalDb().newsDao().loadFavoriteNews();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void saveNews(News news) {
+        AsyncTask.execute(() -> SoccerNewsRepository.getInstance().getLocalDb().newsDao().save(news));
     }
 }

@@ -10,12 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.soccernews.R;
 import com.example.soccernews.databinding.FragmentNewsBinding;
 import com.example.soccernews.ui.adapter.NewsAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 public class NewsFragment extends Fragment {
 
     private FragmentNewsBinding binding;
+    private NewsViewModel newsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -26,10 +29,35 @@ public class NewsFragment extends Fragment {
         View root = binding.getRoot();
 
         binding.rvNews.setLayoutManager(new LinearLayoutManager(getContext()));
-        homeViewModel.getNews().observe(getViewLifecycleOwner(), news ->{
-            binding.rvNews.setAdapter(new NewsAdapter(news));
-        });
+
+        observeNews(homeViewModel);
+        observeStates();
+
+        binding.srlNews.setOnRefreshListenner(newsViewModel::findNews);
+
         return root;
+    }
+
+    private void observeNews(NewsViewModel homeViewModel) {
+        newsViewModel.getNews().observe(getViewLifecycleOwner(), news -> {
+            binding.rvNews.setAdapter(new NewsAdapter(news, newsViewModel::saveNews));
+        });
+    }
+
+    private void observeStates() {
+        newsViewModel.getState().observe(getViewLifecycleOwner(), state -> {
+            switch (state) {
+                case DOING:
+                    binding.srlNews.setRefreshing(true);
+                    break;
+                case DONE:
+                    binding.srlNews.setRefreshing(false);
+                    break;
+                case ERROR:
+                    binding.srlNews.setRefreshing(false);
+                    Snackbar.make(binding.srlNews, R.string.error_network, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
