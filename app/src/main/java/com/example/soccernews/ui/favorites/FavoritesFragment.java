@@ -23,13 +23,10 @@ public class FavoritesFragment extends Fragment {
     private FragmentFavoritesBinding binding;
     private FavoritesViewModel favoritesViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        FavoritesViewModel favoritesViewModel =
-                new ViewModelProvider(this).get(FavoritesViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        favoritesViewModel = new ViewModelProvider(this).get(FavoritesViewModel.class);
 
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
-
 
         loadFavoriteNews();
 

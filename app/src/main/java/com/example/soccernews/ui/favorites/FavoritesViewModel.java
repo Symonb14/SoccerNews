@@ -16,7 +16,7 @@ public class FavoritesViewModel extends ViewModel {
 
     }
     public LiveData<List<News>> loadFavoriteNews() {
-        return (LiveData<List<News>>) SoccerNewsRepository.getInstance().getLocalDb().newsDao().loadFavoriteNews();
+        return SoccerNewsRepository.getInstance().getLocalDb().newsDao().loadFavoriteNews();
     }
 
     public void saveNews(News news) {

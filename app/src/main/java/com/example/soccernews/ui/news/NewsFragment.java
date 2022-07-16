@@ -20,20 +20,18 @@ public class NewsFragment extends Fragment {
     private FragmentNewsBinding binding;
     private NewsViewModel newsViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        NewsViewModel homeViewModel =
-                new ViewModelProvider(this).get(NewsViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 
         binding = FragmentNewsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         binding.rvNews.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        observeNews(homeViewModel);
+        observeNews(newsViewModel);
         observeStates();
 
-        binding.srlNews.setOnRefreshListenner(newsViewModel::findNews);
+        binding.srlNews.setOnRefreshListener(this.newsViewModel::findNews);
 
         return root;
     }
